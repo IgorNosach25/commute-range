@@ -19,68 +19,58 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class CityRangeDFSCounterTest {
     private CityRangeCounter cityRangeCounter;
-    private Set<City> alreadyMarked = new HashSet<>();
     @Mock
     private CitiesDirectionRepository repository;
-    private Set<CitiesDirection> fromKiev;
-    private Set<CitiesDirection> fromMinsk;
-    private Set<CitiesDirection> fromMoscow;
-    private Set<CitiesDirection> fromMadrid;
-    private Set<CitiesDirection> fromLondon;
-    private Set<CitiesDirection> fromBrest;
-    private Set<CitiesDirection> fromVitebsk;
-    private Set<CitiesDirection> fromDoha;
-    private Set<CitiesDirection> fromBarcelona;
     private Map<String, Set<CitiesDirection>> directions;
 
     @Before
     public void setUp() {
         cityRangeCounter = new CityRangeDFSCounter(repository);
-        fromKiev = new HashSet<>();
+        Set<CitiesDirection> fromKiev = new HashSet<>();
         fromKiev.add(new CitiesDirection(new City("Kiev"), new City("Minsk"), 100));
         fromKiev.add(new CitiesDirection(new City("Kiev"), new City("Moscow"), 200));
         fromKiev.add(new CitiesDirection(new City("Kiev"), new City("London"), 250));
 
-        fromMinsk = new HashSet<>();
+        Set<CitiesDirection> fromMinsk = new HashSet<>();
         fromMinsk.add(new CitiesDirection(new City("Minsk"), new City("Kiev"), 100));
         fromMinsk.add(new CitiesDirection(new City("Minsk"), new City("Brest"), 250));
         fromMinsk.add(new CitiesDirection(new City("Minsk"), new City("Vitebsk"), 300));
         fromMinsk.add(new CitiesDirection(new City("Minsk"), new City("Madrid"), 150));
 
 
-        fromMoscow = new HashSet<>();
+        Set<CitiesDirection> fromMoscow = new HashSet<>();
         fromMoscow.add(new CitiesDirection(new City("Moscow"), new City("Kiev"), 200));
         fromMoscow.add(new CitiesDirection(new City("Moscow"), new City("Vitebsk"), 700));
         fromMoscow.add(new CitiesDirection(new City("Moscow"), new City("London"), 500));
 
-        fromMadrid = new HashSet<>();
+        Set<CitiesDirection> fromMadrid = new HashSet<>();
         fromMadrid.add(new CitiesDirection(new City("Madrid"), new City("Minsk"), 150));
         fromMadrid.add(new CitiesDirection(new City("Madrid"), new City("London"), 400));
         fromMadrid.add(new CitiesDirection(new City("Madrid"), new City("Doha"), 1200));
         fromMadrid.add(new CitiesDirection(new City("Madrid"), new City("Barcelona"), 100));
 
 
-        fromLondon = new HashSet<>();
+        Set<CitiesDirection> fromLondon = new HashSet<>();
         fromLondon.add(new CitiesDirection(new City("London"), new City("Kiev"), 250));
         fromLondon.add(new CitiesDirection(new City("London"), new City("Moscow"), 500));
         fromLondon.add(new CitiesDirection(new City("London"), new City("Madrid"), 400));
         fromLondon.add(new CitiesDirection(new City("London"), new City("Doha"), 800));
 
-        fromBrest = new HashSet<>();
+        Set<CitiesDirection> fromBrest = new HashSet<>();
         fromBrest.add(new CitiesDirection(new City("Brest"), new City("Minsk"), 250));
         fromBrest.add(new CitiesDirection(new City("Brest"), new City("Vitebsk"), 300));
 
-        fromVitebsk = new HashSet<>();
+        Set<CitiesDirection> fromVitebsk = new HashSet<>();
         fromVitebsk.add(new CitiesDirection(new City("Vitebsk"), new City("Brest"), 300));
         fromVitebsk.add(new CitiesDirection(new City("Vitebsk"), new City("Minsk"), 300));
         fromVitebsk.add(new CitiesDirection(new City("Vitebsk"), new City("Moscow"), 150));
 
-        fromDoha = new HashSet<>();
+        Set<CitiesDirection> fromDoha = new HashSet<>();
         fromDoha.add(new CitiesDirection(new City("Doha"), new City("London"), 800));
         fromDoha.add(new CitiesDirection(new City("Doha"), new City("Madrid"), 1200));
         fromDoha.add(new CitiesDirection(new City("Doha"), new City("Barcelona"), 1300));
 
-        fromBarcelona = new HashSet<>();
+        Set<CitiesDirection> fromBarcelona = new HashSet<>();
         fromBarcelona.add(new CitiesDirection(new City("Barcelona"), new City("Madrid"), 100));
         fromBarcelona.add(new CitiesDirection(new City("Barcelona"), new City("Doha"), 1300));
 
@@ -104,13 +94,6 @@ public class CityRangeDFSCounterTest {
         Assert.assertEquals(reachableCities, Collections.emptySet());
     }
 
-    @Test(expected = AssertionError.class)
-    public void findReachableCitiesShouldThrowIllegalArgumentExceptionIfRangeLessThen0() {
-        City kiev = new City("Kiev");
-        cityRangeCounter.getReachableCities(kiev, -1);
-    }
-
-
     @Test
     public void findReachableCitiesShouldReturnCorrectCities() {
         int range = 600;
@@ -128,6 +111,7 @@ public class CityRangeDFSCounterTest {
         Set<String> reachableCities = cityRangeCounter.getReachableCities(kiev, range);
         Assert.assertEquals(reachableCities, expectedCities);
     }
+
 
     @Test
     public void findReachableCitiesShouldReturnAllCitiesIfRangeIsMax() {
@@ -147,6 +131,7 @@ public class CityRangeDFSCounterTest {
         Assert.assertEquals(expectedCities, reachableCities);
     }
 
+
     @Test
     public void findReachableCitiesShouldReturnEmptyListIfThereAreNotReachableCitiesWithRange() {
         City city = new City("Moscow");
@@ -156,6 +141,11 @@ public class CityRangeDFSCounterTest {
     }
 
     private void mockDirectionsInDb(City from, int range) {
+        setDirectionsInMockDB(from, range, new HashSet<>());
+
+    }
+
+    private void setDirectionsInMockDB(City from, int range, Set<City> alreadyMarked) {
         Set<CitiesDirection> citiesTo = directions.get(from.getCityName());
         if (citiesTo == null) return;
         for (CitiesDirection citiesDirection : citiesTo) {
@@ -168,7 +158,8 @@ public class CityRangeDFSCounterTest {
                 when(repository.findAllByFromAndDistanceIsLessThanEqual(from, range))
                         .thenReturn(collect);
                 alreadyMarked.add(citiesDirection.getTo());
-                mockDirectionsInDb(citiesDirection.getTo(), range - citiesDirection.getDistance());
+                setDirectionsInMockDB(citiesDirection.getTo(), range - citiesDirection.getDistance(),
+                        alreadyMarked);
             }
         }
 

@@ -11,13 +11,16 @@ import java.util.Set;
 @RequestMapping("city-range/")
 public class CityRangeController {
 
+    private final CityDirectionService cityDirectionService;
+
     @Autowired
-    private CityDirectionService cityDirectionService;
+    public CityRangeController(CityDirectionService cityDirectionService) {
+        this.cityDirectionService = cityDirectionService;
+    }
 
     @GetMapping(value = "reachable-cities")
     @ResponseStatus(HttpStatus.OK)
-    public @ResponseBody
-    Set<String> getReachableCities(@RequestParam(value = "cityName") String cityName,
+    public Set<String> getReachableCities(@RequestParam(value = "cityName") String cityName,
                                  @RequestParam(value = "range") Integer range) {
         return cityDirectionService.getReachableCitiesNames(cityName, range);
     }
