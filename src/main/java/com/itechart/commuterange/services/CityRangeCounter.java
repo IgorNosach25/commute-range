@@ -6,6 +6,6 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-public interface CityRangeService {
-    Set<City> getAvailableCitiesByRange(City from, int city);
+public interface CityRangeCounter {
+    Set<String> getReachableCities(City cityFrom, int range);
 }

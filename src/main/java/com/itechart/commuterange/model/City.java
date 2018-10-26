@@ -2,33 +2,26 @@ package com.itechart.commuterange.model;
 
 import lombok.Data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.Map;
 
 @Entity
+@Data
 public class City {
+
+    public City() {
+    }
+
+    public City(String cityName) {
+        this.cityName = cityName;
+    }
 
     @Id
     @GeneratedValue()
     protected int id;
-    private String name;
-    private Map<City, Integer> distanceToNearbyCities;
+    @Column(unique = true)
+    private String cityName;
 
-    public String getName() {
-        return name;
-    }
-
-    public Map<City, Integer> getDistanceToNearbyCities() {
-        return distanceToNearbyCities;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDistanceToNearbyCities(Map<City, Integer> distanceToNearbyCities) {
-        this.distanceToNearbyCities = distanceToNearbyCities;
-    }
 }
