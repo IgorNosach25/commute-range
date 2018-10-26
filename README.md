@@ -1,6 +1,8 @@
 # commute-range test app.
 
 Simple application for getting reachable cities from some city.
+The algorithm to find all reachable cities is Depth-first search (DFS).
+
 
 Application run on localhost:8080
 
