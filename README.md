@@ -10,8 +10,6 @@ Tools necessasry for running:
 
 -Maven 3.2.2+
 
--Windows 8+
-
 ##Build and run project
 
 #Go to project directory
