@@ -1,15 +1,14 @@
 package com.itechart.commuterange.services;
 
 import com.itechart.commuterange.exceptions.CityNotFoundException;
-import com.itechart.commuterange.model.City;
 import com.itechart.commuterange.model.CitiesDirection;
+import com.itechart.commuterange.model.City;
 import com.itechart.commuterange.repositories.CitiesDirectionRepository;
 import com.itechart.commuterange.repositories.CityRepository;
-import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.Set;
 
 @Service
@@ -29,7 +28,7 @@ public class CityDirectionServiceImp implements CityDirectionService {
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public Set<String> getReachableCitiesNames(String fromCity, int range) {
         if (range < 0) throw new IllegalArgumentException("The range is not correct");
         else if (fromCity == null || fromCity.isEmpty()) throw new IllegalArgumentException("The city is not correct");
