@@ -10,8 +10,12 @@ import org.springframework.stereotype.Component;
 public class ApplicationReadyEventListener implements ApplicationListener<ApplicationReadyEvent> {
 
 
+    private final CityDirectionService cityDirectionService;
+
     @Autowired
-    private CityDirectionService cityDirectionService;
+    public ApplicationReadyEventListener(CityDirectionService cityDirectionService) {
+        this.cityDirectionService = cityDirectionService;
+    }
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {

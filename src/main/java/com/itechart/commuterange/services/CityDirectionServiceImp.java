@@ -13,7 +13,6 @@ import javax.transaction.Transactional;
 import java.util.Set;
 
 @Service
-@NoArgsConstructor
 public class CityDirectionServiceImp implements CityDirectionService {
 
     private CityRepository cityRepository;
