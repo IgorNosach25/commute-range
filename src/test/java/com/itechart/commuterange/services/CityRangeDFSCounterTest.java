@@ -112,26 +112,6 @@ public class CityRangeDFSCounterTest {
         Assert.assertEquals(reachableCities, expectedCities);
     }
 
-
-    @Test
-    public void findReachableCitiesShouldReturnAllCitiesIfRangeIsMax() {
-        City city = new City("Doha");
-        mockDirectionsInDb(city, Integer.MAX_VALUE);
-        Set<String> reachableCities = cityRangeCounter.getReachableCities(city, Integer.MAX_VALUE);
-        Set<String> expectedCities = new HashSet<>();
-        expectedCities.add("Brest");
-        expectedCities.add("Madrid");
-        expectedCities.add("London");
-        expectedCities.add("Kiev");
-        expectedCities.add("Moscow");
-        expectedCities.add("Minsk");
-        expectedCities.add("Barcelona");
-        expectedCities.add("Doha");
-        expectedCities.add("Vitebsk");
-        Assert.assertEquals(expectedCities, reachableCities);
-    }
-
-
     @Test
     public void findReachableCitiesShouldReturnEmptyListIfThereAreNotReachableCitiesWithRange() {
         City city = new City("Moscow");
@@ -149,9 +129,7 @@ public class CityRangeDFSCounterTest {
         Set<CitiesDirection> citiesTo = directions.get(from.getCityName());
         if (citiesTo == null) return;
         for (CitiesDirection citiesDirection : citiesTo) {
-            boolean areDirectionsValid = !alreadyMarked.contains(citiesDirection.getTo())
-                    && citiesDirection.getDistance() <= range;
-            if (areDirectionsValid) {
+            if (citiesDirection.getDistance() <= range) {
                 Set<CitiesDirection> collect = citiesTo.stream()
                         .filter(streamDirection -> streamDirection.getDistance() <=
                                 range).collect(Collectors.toSet());
