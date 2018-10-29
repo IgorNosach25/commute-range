@@ -1,8 +1,22 @@
-# commute-range test app.
+# commute-range app.
 
 Simple application for getting reachable cities from some city.
-The algorithm to find all reachable cities is Depth-first search (DFS).
 
+The problem is to find out all reachable cities from another one. 
+
+Input data are a cityName - from start searching and the range - defines a distance from this city.
+
+The resulst should be a list that contains all reachable cities.
+
+The algorithm to find all reachable cities is Depth-first search (DFS) with defining shortest way that helps to avoid a big count recursive functions executing. 
+
+The algoritm has a Map<String,Integer> as a local variable that helps to define the shortest way which has already been found. It helps to avoid to execute a lot of recursive functions with big range. 
+
+There is also a way to avoid unnecessary functions executions if we have range more then all sum distance. It just returns all cities list. 
+
+The way to improve perfomance is to add a second level and a query cache to Hibernate. 
+
+The main enitites are City(name) and CitiesDirection(cityFrom, cityTo, distance);
 
 Application run on localhost:8080
 
