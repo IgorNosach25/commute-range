@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -26,30 +27,27 @@ public class CityRangeDFSCounter implements CityRangeCounter {
         return findReachableCities(fromCity, range, new HashSet<>(), new HashMap<>());
     }
 
-    private Set<String> findReachableCities(City fromCity, int range, Set<String> citiesNames,
-                                            HashMap<String, Integer> shortestWay) {
+    private Set<String> findReachableCities(City fromCity, int range, Set<String> reachableCitiesNames,
+                                            Map<String, Integer> shortestWay) {
         Set<CitiesDirection> reachableCities = citiesDirectionRepository
                 .findAllByFromAndDistanceIsLessThanEqual(fromCity, range);
         reachableCities.forEach((CitiesDirection direction) -> {
             String cityNameTo = direction.getTo().getCityName();
+            int remainingDistance = range - direction.getDistance();
             if (!shortestWay.containsKey(cityNameTo)) {
-                shortestWay.put(cityNameTo, range - direction.getDistance());
+                shortestWay.put(cityNameTo, remainingDistance);
                 if (direction.getDistance() <= range) {
-                    shortestWay.put(cityNameTo, range - direction.getDistance());
-                    citiesNames.add(cityNameTo);
-                    findReachableCities(direction.getTo(), range - direction.getDistance(), citiesNames, shortestWay);
+                    reachableCitiesNames.add(cityNameTo);
+                    findReachableCities(direction.getTo(), remainingDistance, reachableCitiesNames, shortestWay);
                 }
-            }
-            else if(shortestWay.get(cityNameTo) < range - direction.getDistance()) {
-                shortestWay.put(cityNameTo, range - direction.getDistance());
+            } else if (shortestWay.get(cityNameTo) < remainingDistance) {
+                shortestWay.put(cityNameTo, remainingDistance);
                 if (direction.getDistance() <= range) {
-                    shortestWay.put(cityNameTo, range - direction.getDistance());
-                    citiesNames.add(cityNameTo);
-                    findReachableCities(direction.getTo(), range - direction.getDistance(), citiesNames, shortestWay);
+                    reachableCitiesNames.add(cityNameTo);
+                    findReachableCities(direction.getTo(), remainingDistance, reachableCitiesNames, shortestWay);
                 }
             }
         });
-        return citiesNames;
+        return reachableCitiesNames;
     }
-
 }

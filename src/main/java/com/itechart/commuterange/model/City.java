@@ -11,17 +11,17 @@ import javax.persistence.Id;
 @Data
 public class City {
 
-    public City() {
-    }
+    @Id
+    @GeneratedValue
+    protected int id;
+    @Column(unique = true)
+    private String cityName;
 
     public City(String cityName) {
         this.cityName = cityName;
     }
 
-    @Id
-    @GeneratedValue()
-    protected int id;
-    @Column(unique = true)
-    private String cityName;
+    public City() {
+    }
 
 }
