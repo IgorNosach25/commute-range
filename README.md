@@ -1,23 +1,48 @@
 # commute-range app.
 
-Simple application for getting reachable cities from some city.
 
-The problem is to find out all reachable cities from another one. 
 
+# Goal
+The application for getting reachable cities from some city.
+
+
+# Summary
 Input data are a cityName - from start searching and the range - defines a distance from this city.
-
 The resulst should be a list that contains all reachable cities.
 
+# Problem, 
+The problem is to find out all reachable cities from another one. 
+
+# Solution
 The algorithm to find all reachable cities is Depth-first search (DFS) with defining shortest way that helps to avoid a big count recursive functions executing. 
 
 The algoritm has a Map<String,Integer> as a local variable that helps to define the shortest way which has already been found. It helps to avoid to execute a lot of recursive functions with big range. 
 
 There is also a way to avoid unnecessary functions executions if we have range more then all sum distance. It just returns all cities list. 
 
-The way to improve perfomance is to add a second level and a query cache to Hibernate. 
-
+# Main entities
 The main enitites are City(name) and CitiesDirection(cityFrom, cityTo, distance);
 
+# Performance results
+
+For GET request: 
+1) For Kiev with range 3000 ~ 0,04 ms;
+2) For Kiev with range 400 ~ 0,02 ms;
+3) For Kiev with range 700 ~ 0,03 ms;
+4) For Kiev with range 8000 - 0,03 ms;
+5) For Brest with range 700 ~ 0,02 ms;
+6) For Doha with range 2000 ~ 0,02 ms;
+7) For Minsk with range 0 ~ 0,03 ms;
+8) For Vitebsk with range 3000 - 0,04 ms;
+9) For Vitebsk with range -1: The first time ~ 0,1; The second time ~ 0,01.
+
+(All performance results may vary on different machines)
+
+# Future improvements
+The way to improve perfomance is to add a second level and a query cache to Hibernate. 
+
+
+# Starting 
 Application run on localhost:8080
 
 Tools necessasry for running:
@@ -34,8 +59,8 @@ $ mvn package
 
 $ mvn spring-boot:run
 
-
-the using example below
+# Example
+The using example below
 
 http://localhost:8080/city-range/reachable-cities?cityName=Kiev&range=400
 
