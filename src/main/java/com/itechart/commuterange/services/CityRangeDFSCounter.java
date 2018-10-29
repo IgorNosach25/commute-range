@@ -32,9 +32,16 @@ public class CityRangeDFSCounter implements CityRangeCounter {
                 .findAllByFromAndDistanceIsLessThanEqual(fromCity, range);
         reachableCities.forEach((CitiesDirection direction) -> {
             String cityNameTo = direction.getTo().getCityName();
-            if (!shortestWay.containsKey(cityNameTo))
+            if (!shortestWay.containsKey(cityNameTo)) {
                 shortestWay.put(cityNameTo, range - direction.getDistance());
-            if (shortestWay.get(cityNameTo) <= range - direction.getDistance()) {
+                if (direction.getDistance() <= range) {
+                    shortestWay.put(cityNameTo, range - direction.getDistance());
+                    citiesNames.add(cityNameTo);
+                    findReachableCities(direction.getTo(), range - direction.getDistance(), citiesNames, shortestWay);
+                }
+            }
+            else if(shortestWay.get(cityNameTo) < range - direction.getDistance()) {
+                shortestWay.put(cityNameTo, range - direction.getDistance());
                 if (direction.getDistance() <= range) {
                     shortestWay.put(cityNameTo, range - direction.getDistance());
                     citiesNames.add(cityNameTo);
@@ -44,4 +51,5 @@ public class CityRangeDFSCounter implements CityRangeCounter {
         });
         return citiesNames;
     }
+
 }
