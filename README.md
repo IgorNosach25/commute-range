@@ -4,7 +4,7 @@ Simple application for getting reachable cities from some city.
 
 The problem is to find out all reachable cities from another one. 
 
-Input data is a cityName - from start searching and the range - defines a distance from this city.
+Input data are a cityName - from start searching and the range - defines a distance from this city.
 
 The resulst should be a list that contains all reachable cities.
 
