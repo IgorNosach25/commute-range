@@ -36,6 +36,7 @@ For GET request:
 8) For Vitebsk with range 3000 - 0,04 ms;
 9) For Vitebsk with range -1: The first time ~ 0,1; The second time ~ 0,01.
 
+Cities and directions that have been saved to DB already bellow.
 (All performance results may vary on different machines)
 
 # Future improvements
