@@ -32,11 +32,15 @@ public class CityDirectionServiceImp implements CityDirectionService {
     public Set<String> getReachableCitiesNames(String fromCity, int range) {
         if (range < 0) throw new IllegalArgumentException("The range is not correct");
         else if (fromCity == null || fromCity.isEmpty()) throw new IllegalArgumentException("The city is not correct");
-        City city = cityRepository.findByCityName(fromCity);
-        if (city == null) {
-            String err = String.format("The city [%s] is not found", fromCity);
-            throw new CityNotFoundException(err);
-        } else return cityRangeService.getReachableCities(city, range);
+        int sum = citiesDirectionRepository.distancesSum();
+        if (sum > 0 && range >= sum) return cityRepository.findAllCitiesNames();
+        else {
+            City city = cityRepository.findByCityName(fromCity);
+            if (city == null) {
+                String err = String.format("The city [%s] is not found", fromCity);
+                throw new CityNotFoundException(err);
+            } else return cityRangeService.getReachableCities(city, range);
+        }
     }
 
     @Override

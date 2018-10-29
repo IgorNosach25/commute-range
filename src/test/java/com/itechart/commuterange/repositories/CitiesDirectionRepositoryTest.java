@@ -13,7 +13,7 @@ import java.util.Set;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class CitiesDirectionTest {
+public class CitiesDirectionRepositoryTest {
 
     @Autowired
     private CitiesDirectionRepository citiesDirectionRepository;
@@ -44,10 +44,8 @@ public class CitiesDirectionTest {
         City london = new City("London");
         CitiesDirection expectedCitiesDirection = new CitiesDirection(kiev, london, 300);
 
-
         City moscow = new City("Moscow");
         CitiesDirection expectedCitiesDirection2 = new CitiesDirection(kiev, moscow, 200);
-
 
         City madrid = new City("Madrid");
         CitiesDirection expectedCitiesDirection3 = new CitiesDirection(kiev, madrid, 100);
@@ -67,5 +65,25 @@ public class CitiesDirectionTest {
         Set<CitiesDirection> directions3 =
                 citiesDirectionRepository.findAllByFromAndDistanceIsLessThanEqual(kiev, 99);
         Assert.assertEquals(directions3.size(), 0);
+    }
+
+    @Test
+    public void findDistancesSumShouldReturnSumOfAllDistances() {
+        City kiev = new City("Kiev");
+        City london = new City("London");
+        CitiesDirection expectedCitiesDirection = new CitiesDirection(kiev, london, 300);
+
+        City moscow = new City("Moscow");
+        CitiesDirection expectedCitiesDirection2 = new CitiesDirection(kiev, moscow, 200);
+
+        City madrid = new City("Madrid");
+        CitiesDirection expectedCitiesDirection3 = new CitiesDirection(kiev, madrid, 100);
+
+        citiesDirectionRepository.save(expectedCitiesDirection);
+        citiesDirectionRepository.save(expectedCitiesDirection2);
+        citiesDirectionRepository.save(expectedCitiesDirection3);
+
+        int sum = citiesDirectionRepository.distancesSum();
+        Assert.assertEquals(600, sum);
     }
 }

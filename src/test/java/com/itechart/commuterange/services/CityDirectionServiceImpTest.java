@@ -30,9 +30,7 @@ public class CityDirectionServiceImpTest {
 
     @Before
     public void setUp() {
-        cityDirectionService = new CityDirectionServiceImp(cityRepository,
-                cityRangeCounter,
-                citiesDirectionRepository);
+        cityDirectionService = new CityDirectionServiceImp(cityRepository, cityRangeCounter, citiesDirectionRepository);
         foundedCities = new HashSet<>();
         foundedCities.add("Kiev");
         foundedCities.add("Madrid");
@@ -58,12 +56,22 @@ public class CityDirectionServiceImpTest {
     }
 
     @Test
+    public void getReachableCitiesShouldReturnAllCitiesIfRangeMoreOrEqualsToDistanceSum() {
+        String cityName = "Minsk";
+        given(citiesDirectionRepository.distancesSum()).willReturn(5000);
+        given(cityRepository.findAllCitiesNames()).willReturn(foundedCities);
+        Set<String> reachableCitiesNames = cityDirectionService.getReachableCitiesNames(cityName, Integer.MAX_VALUE);
+        Assert.assertEquals(foundedCities, reachableCitiesNames);
+    }
+
+    @Test
     public void getReachableCitiesShouldReturnReachableCitiesFromCityWithRange() {
         String cityName = "Minsk";
         City city = new City(cityName);
         given(cityRepository.findByCityName(cityName)).willReturn(city);
         given(cityRangeCounter.getReachableCities(city, 200)).willReturn(foundedCities);
-        Assert.assertEquals(foundedCities, foundedCities);
+        Set<String> reachableCitiesNames = cityDirectionService.getReachableCitiesNames(cityName, 200);
+        Assert.assertEquals(foundedCities, reachableCitiesNames);
     }
 
     @Test(expected = IllegalArgumentException.class)

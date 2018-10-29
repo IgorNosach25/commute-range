@@ -7,5 +7,7 @@ import java.util.Set;
 
 @Service
 public interface CityRangeCounter {
+
     Set<String> getReachableCities(City cityFrom, int range);
+
 }
