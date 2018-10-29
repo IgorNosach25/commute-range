@@ -1,4 +1,4 @@
-# commute-range test app.
+# commute-range app.
 
 Simple application for getting reachable cities from some city.
 
